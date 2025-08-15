@@ -1,0 +1,8 @@
+.env
+
+# Exclude Python cache files
+__pycache__/
+*.pyc
+
+# Exclude JetBrains IDE settings
+.idea/
