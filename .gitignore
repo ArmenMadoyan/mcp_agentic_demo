@@ -1,0 +1,39 @@
+# === General Python ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+*.sqlite3
+*.db
+.DS_Store
+
+# === Environment Files ===
+.env
+.env.*
+*.env
+
+# === uv (ultrafast Python) ===
+**/.venv/
+uv.lock
+
+# === IDEs ===
+.idea/
+.vscode/
+
+# === Docker ===
+*.pid
+docker-compose.override.yml
+
+# === Notebooks / Dev Logs ===
+*.ipynb_checkpoints
+*.log
+*.trace
+
+# === Frontend Streamlit Cache ===
+frontend/.streamlit/
+frontend/__pycache__/
+
+# === Compiled ===
+*.so
+*.dll
+*.pyd
