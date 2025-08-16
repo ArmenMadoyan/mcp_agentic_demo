@@ -7,3 +7,9 @@
 [submodule "api/external/mcp_wolfram"]
 	path = api/external/mcp_wolfram
 	url = https://github.com/SecretiveShell/MCP-wolfram-alpha
+[submodule "api/external/external/mcp_wikipedia"]
+	path = api/external/external/mcp_wikipedia
+	url = https://github.com/Rudra-ravi/wikipedia-mcp.git
+[submodule "api/external/mcp_wikipedia"]
+	path = api/external/mcp_wikipedia
+	url = https://github.com/Rudra-ravi/wikipedia-mcp.git

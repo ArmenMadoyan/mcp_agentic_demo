@@ -1,38 +1,30 @@
-from langgraph.prebuilt import create_react_agent
-from langgraph.graph import StateGraph
-from langgraph.checkpoint import BaseSaver
-
-from langchain_core.messages import AIMessage, HumanMessage
-from langchain_core.runnables import RunnableConfig
+from typing import Annotated
+from langgraph.prebuilt import create_react_agent, InjectedState
+from langgraph.checkpoint.memory import InMemorySaver
 
 from api.main_app.agents.tools.wikipedia import WikipediaTool
-from api.main_app.agents.tools.wolfram import WolframTool
-
 from config import Config
+
 model = Config.set_model(model_name='gpt-4o')
 
-# Define the list of tools (agents) available to the supervisor
-tools = [WikipediaTool, WolframTool]
+# --- wrap classes into callable sub-agents ---
+async def wikipedia_agent(state: Annotated[dict, InjectedState]) -> str:
+    """Use the Wikipedia MCP sub-agent to fetch concise, factual summaries for the latest user message."""
 
-# Entry + Exit keys for the LangGraph flow
-class AgentState(dict):
-    pass
+    tool = WikipediaTool()
+    query = state["messages"][-1].content  # latest user msg
+    return await tool._arun(query)
 
-def get_supervisor_agent(memory_store: BaseSaver):
-    # React agent from LangChain with tool usage
-    react_agent = create_react_agent(
+
+
+def get_supervisor_agent(memory_store: InMemorySaver):
+    # tools = sub-agents (functions)
+    tools = [wikipedia_agent]
+
+    supervisor = create_react_agent(
+        model,
         tools=tools,
-        llm="openai/gpt-4",  # replace with LangChain LLM if using LC integration
-        prompt="You are a helpful agentic assistant using tools to help the user."
+        checkpointer=memory_store
     )
 
-    # Create stateful LangGraph
-    builder = StateGraph(AgentState)
-    builder.add_node("agent", react_agent)
-    builder.set_entry_point("agent")
-    builder.set_finish_point("agent")
-
-    app = builder.compile()
-
-    # Return the runnable graph with memory
-    return app.with_configurable(configurable={"memory": memory_store})
+    return supervisor

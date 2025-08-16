@@ -19,7 +19,7 @@ class Config:
             model_name = 'claude-2'
             api_key = claude_api_key
         else:
-            api_key = langsmith_api_key
+            api_key = openai_api_key
 
         llm = ChatOpenAI(
             model=model_name,
