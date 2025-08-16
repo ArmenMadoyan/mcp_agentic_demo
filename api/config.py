@@ -1,13 +1,13 @@
 from dotenv import load_dotenv
 import os
 from langchain_openai import ChatOpenAI
+from pydantic import SecretStr
 
 load_dotenv(dotenv_path='.env', override=True)
 
 openai_api_key = os.getenv('OPENAI_API_KEY')
 langsmith_api_key = os.getenv('LANGSMITH_API_KEY')
 claude_api_key = os.getenv('CLAUDE_API_KEY')
-model = os.getenv('MODEL_NAME')
 
 class Config:
     LANGSMITH_API_KEY = langsmith_api_key
@@ -27,6 +27,6 @@ class Config:
             max_tokens=None,
             timeout=None,
             max_retries=2,
-            api_key=api_key,
+            api_key= SecretStr(api_key),
         )
         return llm
