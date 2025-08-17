@@ -7,8 +7,15 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
 from pydantic import SecretStr
-
-load_dotenv(dotenv_path='.env', override=True)
+# Resolve project root no matter where this file lives
+ROOT = Path(__file__).resolve().parents[0]
+# If this file is in api/, parents[1] is project root. If it’s in project root, keep parents[0].
+if (ROOT / ".env").exists():
+    DOTENV = ROOT / ".env"
+else:
+    DOTENV = Path(__file__).resolve().parents[1] / ".env"
+# Load .env from project root, override anything stale
+load_dotenv(dotenv_path=DOTENV, override=True)
 
 openai_api_key = os.getenv('OPENAI_API_KEY')
 langsmith_api_key = os.getenv('LANGSMITH_API_KEY')
