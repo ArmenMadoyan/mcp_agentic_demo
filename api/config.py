@@ -7,6 +7,8 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
 from pydantic import SecretStr
+from pathlib import Path
+
 # Resolve project root no matter where this file lives
 ROOT = Path(__file__).resolve().parents[0]
 # If this file is in api/, parents[1] is project root. If it’s in project root, keep parents[0].
