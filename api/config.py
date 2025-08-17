@@ -4,6 +4,8 @@ import logging
 import sys
 from pythonjsonlogger import json
 from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+
 from pydantic import SecretStr
 
 load_dotenv(dotenv_path='.env', override=True)
@@ -36,16 +38,23 @@ class Config:
 
         if model_name.lower().strip() == 'claude-2':
             model_name = 'claude-2'
-            api_key = claude_api_key
-        else:
-            api_key = openai_api_key
 
-        llm = ChatOpenAI(
-            model=model_name,
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2,
-            api_key= SecretStr(api_key),
-        )
+            llm = ChatAnthropic(
+                model=model_name,
+                temperature=0,
+                max_tokens=1000,
+                timeout=60,
+                max_retries=2,
+                api_key=SecretStr(claude_api_key),
+            )
+        else:
+            llm = ChatOpenAI(
+                model=model_name,
+                temperature=0,
+                max_tokens=1000,
+                timeout=60,
+                max_retries=2,
+                api_key= SecretStr(openai_api_key),
+            )
+
         return llm

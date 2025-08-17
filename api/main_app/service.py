@@ -1,4 +1,3 @@
-import json
 import traceback
 
 from api.main_app.schemas import ChatRequest, ChatResponse
@@ -27,9 +26,9 @@ def extract_reasoning(state: dict) -> list[str]:
 
     return reasoning_steps
 
-async def handle_chat(request: ChatRequest) -> ChatResponse:
+async def handle_chat(request: ChatRequest, llm) -> ChatResponse:
 
-    agent = await build_supervisor(memory_store)
+    agent = await build_supervisor(memory_store, llm)
     result = None
     try:
         logger.info("INVOKING AGENT WITH USER INPUT:", extra={"conversation_id": request.session_id, "user_input": request.user_input})

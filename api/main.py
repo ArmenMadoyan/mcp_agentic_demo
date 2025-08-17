@@ -1,8 +1,12 @@
+import asyncio
+
 from fastapi import FastAPI
 from api.main_app.routes import router
 import uvicorn
 import sys
 import os
+
+from config import Config
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -16,6 +20,8 @@ app = FastAPI(
 # Include the /chat route
 app.include_router(router)
 
+app.state.model_lock = asyncio.Lock()
+app.state.llm = Config.set_model("gpt-4o")
 
 # Run the app directly
 if __name__ == "__main__":

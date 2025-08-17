@@ -1,6 +1,22 @@
 import streamlit as st
 import uuid
 import requests
+AVAILABLE_MODELS = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo", "claude-2"]
+
+# Display model selection
+selected_model = st.selectbox("Choose a model", ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo", "claude-2"])
+
+# When selected, call the backend
+if st.button("Set Model"):
+    try:
+        response = requests.post("http://localhost:8000/set_model", params={"model_name": selected_model})
+        if response.status_code == 200:
+            st.success(f"Model set to {selected_model}")
+        else:
+            st.error(f"Failed to set model: {response.text}")
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+
 
 st.set_page_config(page_title="Wikipedia Agent", layout="centered")
 

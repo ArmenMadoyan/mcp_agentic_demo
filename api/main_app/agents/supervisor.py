@@ -6,10 +6,9 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 from config import Config
 
-model = Config.set_model(model_name='gpt-4o')
 logger = Config.setup_logger("supervisor")
 
-async def build_supervisor(memory_store: InMemorySaver):
+async def build_supervisor(memory_store: InMemorySaver, llm):
     client = MultiServerMCPClient(
         {
             "wikipedia": {
@@ -40,6 +39,6 @@ async def build_supervisor(memory_store: InMemorySaver):
         return None
 
 
-    agent = create_react_agent(model, tools=tools, checkpointer=memory_store)
+    agent = create_react_agent(llm, tools=tools, checkpointer=memory_store)
 
     return agent
