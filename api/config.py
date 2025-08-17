@@ -35,26 +35,29 @@ class Config:
 
     @staticmethod
     def set_model(model_name: str = 'gpt-4o'):
+        try:
+            if model_name.lower().strip() == 'claude-2':
+                model_name = 'claude-2'
 
-        if model_name.lower().strip() == 'claude-2':
-            model_name = 'claude-2'
+                llm = ChatAnthropic(
+                    model=model_name,
+                    temperature=0,
+                    max_tokens=1000,
+                    timeout=60,
+                    max_retries=2,
+                    api_key=SecretStr(claude_api_key),
+                )
+            else:
+                llm = ChatOpenAI(
+                    model=model_name,
+                    temperature=0,
+                    max_tokens=1000,
+                    timeout=60,
+                    max_retries=2,
+                    api_key= SecretStr(openai_api_key),
+                )
 
-            llm = ChatAnthropic(
-                model=model_name,
-                temperature=0,
-                max_tokens=1000,
-                timeout=60,
-                max_retries=2,
-                api_key=SecretStr(claude_api_key),
-            )
-        else:
-            llm = ChatOpenAI(
-                model=model_name,
-                temperature=0,
-                max_tokens=1000,
-                timeout=60,
-                max_retries=2,
-                api_key= SecretStr(openai_api_key),
-            )
-
-        return llm
+            return llm
+        except Exception as e:
+            print("Please Set OPENAI_API_KEY or CLAUDE_API_KEY in .env file")
+            raise e
