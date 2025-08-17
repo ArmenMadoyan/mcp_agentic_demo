@@ -29,11 +29,11 @@ def extract_reasoning(state: dict) -> list[str]:
 async def handle_chat(request: ChatRequest) -> ChatResponse:
 
     agent = await build_supervisor(memory_store)
-
+    result = None
     try:
         print("INVOKING AGENT WITH USER INPUT:", request.user_input)
         result = await agent.ainvoke(
-            {"messages": [("user", request.user_input), ("system", "You are a helpful assistant with access to tools. Always respond based on tools. Never retrieve information from the web or your sources.")]},
+            {"messages": [("user", request.user_input + "! Include your reasoning!"), ("system", "You are a helpful assistant with access to tools. Always respond based on tools. Never retrieve information from the web or your sources.")]},
             config={"thread_id": request.session_id},
             print_mode="values"
         )
