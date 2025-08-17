@@ -1,5 +1,8 @@
 from dotenv import load_dotenv
 import os
+import logging
+import sys
+from pythonjsonlogger import json
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
 
@@ -11,6 +14,22 @@ claude_api_key = os.getenv('CLAUDE_API_KEY')
 
 class Config:
     LANGSMITH_API_KEY = langsmith_api_key
+
+    @staticmethod
+    def setup_logger(name=__name__, level=logging.INFO):
+        # JSON formatter (minimal fields, can expand if needed)
+        formatter = json.JsonFormatter(
+            "%(asctime)s %(levelname)s %(name)s %(message)s %(conversation_id)s %(user_id)s"
+        )
+
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(formatter)
+
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        logger.handlers = [handler]
+        logger.propagate = False
+        return logger
 
     @staticmethod
     def set_model(model_name: str = 'gpt-4o'):
