@@ -1,5 +1,3 @@
-# mcp_agentic_demo
-
 # 🧠 Agentic LLM System Demo
 
 ## 🚀 Purpose
